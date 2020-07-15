@@ -24,7 +24,8 @@ Route::get('/callback', 'SocialAuthGoogleController@callback');
 Route::get('/testify/{testimonial_id}', 'testifyController@delete');
 Route::get('/featured-request', 'RequestController@fetch_featured_requests');
 Route::post('invest', 'InvestController@index');
-Route::get('invest/redirect/{id}', 'InvestController@redirect');
+Route::get('invest/redirect/{id}', 'InvestController@redirect')->name('redirect');
+Route::POST('invest/redirect/{id}', 'InvestController@redirect')->name('redirect');
 Route::get('terms-and-conditions', 'PagesController@termsAndConditions');
 Route::get('privacy-policy', 'PagesController@privacyPolicy');
 Route::get('campaign', 'PagesController@campaign');
@@ -33,6 +34,7 @@ Route::get('album', 'PagesController@album');
 Route::get('faq', 'PagesController@faq');
 /* Route::get('payment', 'PagesController@payment'); */
 //make payment for a request... where {id} is requestId
+Route::post('transaction/store', 'TransactionController@store');
 Route::get('payment/{id}', 'PagesController@payment');
 Route::post('payment/{id}', 'PagesController@payment');
 Route::get('benefit', 'PagesController@benefit');
@@ -56,6 +58,8 @@ Route::get('signup', 'PagesController@signUp');
 Route::get('total-investment', 'PagesController@totalInvestment');
 Route::get('test-modals', 'PagesController@testModals');
 Route::get('login', 'PagesController@login')->name('login');
+//login post route
+Route::post('login', 'UserController@login');
 Route::get('sign-up', 'PagesController@sign_up');
 Route::post('update-profile/{id}','UserController@update')->name('update-profile');
 Route::get('edit-profile/{id}','UserController@edit');

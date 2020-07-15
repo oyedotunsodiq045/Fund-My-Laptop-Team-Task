@@ -60,7 +60,7 @@ class PagesController extends Controller
     {
         if(isset($id)){
         $request = FundRequest::whereId($id)->firstOrFail();
-         $userId = $request->user_id;
+         $userId = Auth::user()->id;
          $user = User::whereId($userId)->firstOrFail();
          $firstName = $user->firstName;
          $lastName = $user->lastName;
@@ -118,9 +118,9 @@ class PagesController extends Controller
     public function investorDashboard()
     {
 
-        // if(Auth::check()==True) {
-        // $user_id=Auth::user()->id();   
-        $user_id=22;   
+         if(Auth::check()==True) {
+         $user_id=Auth::user()->id;   
+        
         $user = User::find($user_id);
         $transactiontotal=array_sum(json_decode(Transaction::where([['user_id',$user_id],['status','success']])->pluck('amount')));
            $requests=FundRequest::where([['isFunded',0],['isSuspended', 0],['isActive', 1]])->get();
@@ -131,14 +131,16 @@ class PagesController extends Controller
             $rate=$transaction->request->accrual->avg('rate')+$rate;
 
         }
-        $intrestAverage=$rate/count($transactions);
+        $intrestAverage=round($rate/count($transactions),1);
         $repaymenttotal=0;
         foreach( $transactions as  $transaction){
         $repaymenttotal = array_sum(json_decode( $transaction->request->repayment->pluck('amount_paid')))+$repaymenttotal;       
     }
     
         return view('investor-dashboard')->with(compact('transactiontotal','user','repaymenttotal','transactions','requests','intrestAverage'));
-    
+}else{
+    return redirect(url('login'));   
+}
     }
 
     public function investeeDashboard()
